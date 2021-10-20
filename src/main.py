@@ -21,9 +21,9 @@ if __name__=="__main__":
     parser.add_argument('--filePattern', dest='filePattern', type=str,
                         help='Filename pattern to filter data.', required=True)
     parser.add_argument('--individualStats', dest='individualStats', type=str,  default="false",
-                        help='Boolean to create separate result file per image.', required=False)
+                        help='Boolean to create separate result file per image. Default is false.', required=False)
     parser.add_argument('--totalStats', dest='totalStats', type=str,  default="false",
-                        help='Boolean to calculate overall statistics across all images.', required=False)
+                        help='Boolean to calculate overall statistics across all images. Default is false.', required=False)
 
     # Output arguments                    
     parser.add_argument('--outDir', dest='outDir', type=str,

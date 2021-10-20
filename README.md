@@ -23,7 +23,7 @@ This plugin takes six input arguments and one output argument:
 | `--PredDir` | Predicted input image collection to be processed by this plugin | Input | collection |
 | `--inputClasses` | Number of classes | Input | number |
 | `--filePattern`  | File name pattern to filter data. | Input | string |
-| `--individualStats`  | Boolean to create separate result file per image. | Input | boolean |
-| `--totalStats`  | Boolean to calculate overall statistics across all images. | Input | boolean |
-| `--outDir` | Output collection | Output | genericData |
+| `--individualStats`  | Boolean to create separate result file per image. Default is false. | Input | boolean |
+| `--totalStats`  | Boolean to calculate overall statistics across all images. Default is false. | Input | boolean |
+| `--outDir` | Output collection | Output | csvCollection |
 

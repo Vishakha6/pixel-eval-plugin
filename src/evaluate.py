@@ -14,12 +14,12 @@ logger.setLevel(logging.INFO)
 header = ['Image_Name', 'Class', 'TP', 'TN', 'FP', 'FN', 'IoU','sensitivity','precision','specificity','negative predictive value','false negative rate',\
 		'false positive rate','false discovery rate','false omission rate','prevalence','accuracy/rand index',\
 		'Balanced Accuracy','F-Scores (weighted) ','F1-Score/dice index','prevalence threshold','Matthews Correlation Coefficient','Fowlkes-Mallows Index','Bookermaker Informedness',\
-		'markedness',"cohen's kappa index",'mirkin metric','adjusted mirkin metric', 'adjusted rand index']
+		'markedness',"cohen's kappa index","mirkin metric","adjusted mirkin metric", "adjusted rand index"]
 
 totalStats_header = ['Class', 'TP', 'TN', 'FP', 'FN', 'IoU','sensitivity','precision','specificity','negative predictive value','false negative rate',\
         'false positive rate','false discovery rate','false omission rate','prevalence','accuracy/rand index',\
         'Balanced Accuracy','F-Scores (weighted) ','F1-Score/dice index','prevalence threshold','Matthews Correlation Coefficient','Fowlkes-Mallows Index','Bookermaker Informedness',\
-        'markedness',"cohen's kappa index",'mirkin metric','adjusted mirkin metric','adjusted rand index']
+        'markedness',"cohen's kappa index","mirkin metric","adjusted mirkin metric","adjusted rand index"]
 
 def metrics(tp, fp, fn, tn):
     """Calculates evaluation metrics.
@@ -54,9 +54,9 @@ def metrics(tp, fp, fn, tn):
         mm: mirkin metric
         amm: adjusted mirkin metric
     """
-    ntot = tp+tn+fp+fn
+    ntot = tp+tn+fp+fn+1e-20
     iou = tp/(tp+fp+fn)
-    fval = 1
+    fval = 0.5
     tnr = tn/(tn+fp)
     tpr = tp/(tp+fn)
     precision = tp/(tp+fp)
@@ -70,9 +70,9 @@ def metrics(tp, fp, fn, tn):
     ba = (0.5*tp/(tp+fn)) + (0.5*tn/(tn+fp))
     fscore = ((1+fval**2)*tp)/((1+fval**2)*tp + (fval**2)*fn + fp)
     f1_score = (2*tp)/(2*tp + fn + fp)
-    pt = ((tnr-1)+ math.sqrt(tpr*(1-tnr)))/(tpr+tnr-1)
-    mcc = ((tp*tn)-(fp*fn))/(math.sqrt((tp+fp)*(tp+fn)*(tn+fn)*(tn+fp)))
-    fmi = tp / math.sqrt((tp + fp) * (tp + fn))
+    pt = ((tnr-1)+ math.sqrt(tpr*(1-tnr)))/(tpr+tnr-1+1e-20)
+    mcc = ((tp*tn)-(fp*fn))/(math.sqrt((tp+fp)*(tp+fn)*(tn+fn)*(tn+fp))+1e-20)
+    fmi = tp / (math.sqrt((tp + fp) * (tp + fn))+1e-20)
     bi = (tp/(tp+fn))+(tn/(tn+fp))-1
     mkn = (tp/(tp+fp))+(tn/(tn+fn))-1
     norm_prd_pos = (tp+fp)/ntot
@@ -81,7 +81,7 @@ def metrics(tp, fp, fn, tn):
     norm_act_neg = (fp+tn)/ntot
     ck_num = accuracy-(norm_prd_pos*norm_act_pos + norm_prd_neg*norm_act_neg)
     ck_denom = 1-(norm_prd_pos*norm_act_pos + norm_prd_neg*norm_act_neg)
-    ck = ck_num/ck_denom
+    ck = ck_num/(ck_denom+1e-20)
     mm = ntot*(ntot-1)*(1-accuracy)
     amm = (ntot*(ntot-1)*(1-accuracy))/(ntot*ntot)
 
@@ -161,6 +161,10 @@ def evaluation(GTDir, PredDir, inputClasses, outDir, filePattern, individualStat
                                                 else:
                                                     tn+=1
 
+                            if tp == 0:
+                                tp = 1e-20
+                            if tn == 0:
+                                tn = 1e-20 
                             iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari = metrics(tp, fp, fn, tn)
                             data = [file_name.name, cl, tp, tn, fp, fn, iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari]
                             writer.writerow(data)
@@ -186,6 +190,10 @@ def evaluation(GTDir, PredDir, inputClasses, outDir, filePattern, individualStat
             writer2 = csv.writer(f2)
             writer2.writerow(totalStats_header)
             for cl in range(1,inputClasses+1):
+                if TP[cl] == 0:
+                    TP[cl] = 1e-20
+                if TN[cl] == 0:
+                    TN[cl] = 1e-20
                 iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari = metrics(TP[cl], FP[cl], FN[cl], TN[cl])
                 data = [cl, TP[cl], TN[cl], FP[cl], FN[cl], iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari]
             writer2.writerow(data)

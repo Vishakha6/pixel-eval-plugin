@@ -1,6 +1,6 @@
 {
     "name": "Pixelwise Evaluation Plugin",
-    "version": "0.1.2",
+    "version": "0.1.7",
     "title": "Pixelwise Evaluation Plugin",
     "description": "Plugin to generate evaluation metrics for pixel-wise comparison of ground truth and predicted images.",
     "author": "Vishakha Goyal (vishakha.goyal@nih.gov)",
@@ -8,7 +8,7 @@
     "repository": "https://github.com/labshare/polus-plugins",
     "website": "https://ncats.nih.gov/preclinical/core/informatics",
     "citation": "",
-    "containerId": "polusai/pixelwise-eval-plugin:0.1.2",
+    "containerId": "polusai/pixelwise-eval-plugin:0.1.7",
     "inputs": [
       {
         "name": "GTDir",
@@ -37,20 +37,20 @@
       {
         "name": "individualStats",
         "type": "boolean",
-        "description": "Boolean to create separate result file per image.",
+        "description": "Boolean to create separate result file per image. Default is false.",
         "required": false
       },
       {
         "name": "totalStats",
         "type": "boolean",
-        "description": "Boolean to calculate overall statistics across all images.",
+        "description": "Boolean to calculate overall statistics across all images. Default is false.",
         "required": false
       }
     ],
     "outputs": [
       {
         "name": "outDir",
-        "type": "genericData",
+        "type": "csvCollection",
         "description": "Output collection"
       }
     ],
@@ -78,12 +78,12 @@
       {
         "key": "inputs.individualStats",
         "title": "Individual statistics",
-        "description": "Boolean to create separate result file per image."
+        "description": "Boolean to create separate result file per image. Default is false."
       },
       {
         "key": "inputs.totalStats",
         "title": "Total statistics",
-        "description": "Boolean to calculate overall statistics across all images."
+        "description": "Boolean to calculate overall statistics across all images. Default is false."
       }
 
     ]
