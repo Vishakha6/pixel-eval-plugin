@@ -162,10 +162,14 @@ def evaluation(GTDir, PredDir, inputClasses, outDir, filePattern, individualStat
                                                     tn+=1
 
                             if tp == 0:
-                                tp = 1e-20
+                                tp_ = 1e-20
+                            else:
+                                tp_ = tp
                             if tn == 0:
-                                tn = 1e-20 
-                            iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari = metrics(tp, fp, fn, tn)
+                                tn_ = 1e-20 
+                            else:
+                                tn_ = tn
+                            iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari = metrics(tp_, fp, fn, tn_)
                             data = [file_name.name, cl, tp, tn, fp, fn, iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari]
                             writer.writerow(data)
 
@@ -191,10 +195,14 @@ def evaluation(GTDir, PredDir, inputClasses, outDir, filePattern, individualStat
             writer2.writerow(totalStats_header)
             for cl in range(1,inputClasses+1):
                 if TP[cl] == 0:
-                    TP[cl] = 1e-20
+                    TP_ = 1e-20
+                else:
+                    TP_ = TP[cl]
                 if TN[cl] == 0:
-                    TN[cl] = 1e-20
-                iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari = metrics(TP[cl], FP[cl], FN[cl], TN[cl])
+                    TN_ = 1e-20
+                else:
+                    TN_ = TN[cl]
+                iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari = metrics(TP_, FP[cl], FN[cl], TN_)
                 data = [cl, TP[cl], TN[cl], FP[cl], FN[cl], iou, tpr, precision, tnr,npv,fnr,fpr,fdr,fr,prev,accuracy,ba,fscore,f1_score,pt,mcc,fmi, bi,mkn,ck, mm, amm, ari]
             writer2.writerow(data)
             f2.close()
